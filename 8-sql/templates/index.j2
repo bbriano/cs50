@@ -1,0 +1,36 @@
+<h1>Tasks</h1>
+
+<form method="POST" action="/">
+    <input type="text" name="text" />
+    <button type="submit">Add</button>
+</form>
+
+<pre>{{tasks}}</pre>
+{% for task in tasks %}
+<label >
+    <input
+        type="checkbox" {{ 'checked' if task[2] else '' }}
+        onclick="handleCheck({{ task[0] }}, this)"
+    /> {{ task[1] }}
+    <button onclick="handleDelete({{ task[0] }})">X</button>
+</label><br />
+{% endfor %}
+
+<script>
+    function handleCheck(id, checkbox) {
+        const value = checkbox.checked
+        fetch('/', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, done: value }),
+        }).then(() => location.reload());
+    }
+
+    function handleDelete(id) {
+        fetch('/', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id }),
+        }).then(() => location.reload());
+    }
+</script>
